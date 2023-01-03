@@ -5,18 +5,32 @@
 */
 
 // State hook u import edin
-import React from 'react';
+import React,{useState} from 'react';
+import Gönderiler from "./bileşenler/Gönderiler/Gönderiler";
+import AramaÇubuğu from "./bileşenler/AramaÇubuğu/AramaÇubuğu.js"
 
 // Gönderiler (çoğul!) ve AramaÇubuğu bileşenlerini import edin, çünkü bunlar App bileşeni içinde kullanılacak
 // sahteVeri'yi import edin
 import './App.css';
+import sahteVeri from './sahte-veri';
 
 const App = () => {
+
+  const [gonderiler,setGonderiler] = useState(sahteVeri);
+  const [arama,setArama] = useState("");
   // Gönderi nesneleri dizisini tutmak için "gonderiler" adlı bir state oluşturun, **sahteVeri'yi yükleyin**.
   // Artık sahteVeri'ye ihtiyacınız olmayacak.
   // Arama çubuğunun çalışması için , arama kriterini tutacak başka bir state'e ihtiyacımız olacak.
 	
   const gonderiyiBegen = gonderiID => {
+    setGonderiler( gonderiler.map(item => {
+      if(item.id === gonderiID ){
+         item.likes++
+      };
+      return item;
+    }))
+   
+    
     /*
       Bu fonksiyon, belirli bir id ile gönderinin beğeni sayısını bir artırma amacına hizmet eder.
 
@@ -29,12 +43,23 @@ const App = () => {
         - aksi takdirde, sadece gönderi nesnesini değiştirmeden döndürün.
      */
   };
+  const aramaYap = (arama) => {
+      let filterArray = [];
+      filterArray = sahteVeri.filter((item) => {
+        return item.username.includes(arama);
+      })
+      setGonderiler(filterArray);
+    }
+
 
   return (
     <div className='App'>
+    <AramaÇubuğu aramaYap = {aramaYap} />
+    <Gönderiler gonderiyiBegen = {gonderiyiBegen} gonderiler = {gonderiler}/>
       {/* AramaÇubuğu ve Gönderiler'i render etmesi için buraya ekleyin */}
       {/* Her bileşenin hangi proplara ihtiyaç duyduğunu kontrol edin, eğer ihtiyaç varsa ekleyin! */}
     </div>
+  
   );
 };
 
